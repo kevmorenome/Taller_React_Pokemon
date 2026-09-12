@@ -1,2 +1,2 @@
-# Angular_Pokemon
-Pokemon Angular
+  # 5  Taller_React_Pokemon
+Taller React de Pokemon
