@@ -112,4 +112,5 @@ export const PokemonProvider : React.FC<{ children : React.ReactNode }> = ({ chi
 export const usePokemon = () => {
     const context = useContext(PokemonContext);
     if(!context) throw new Error('usePokemon debe usarse en un Provider')
-}
+    return context;
+};

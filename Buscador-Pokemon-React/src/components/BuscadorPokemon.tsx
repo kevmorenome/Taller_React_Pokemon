@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
-import {usePokemon, type PokemonTarjeta} from '../context/PokemonContext'
+import {usePokemon, type PokemonTarjeta } from '../context/PokemonContext'
 
-export const RegistroUsuario: React.FC = () =>{
+export const BuscadorPokemon: React.FC = () =>{
     const { entrenadores, entrenadorActivo, registrarEntrenador, seleccionarEntrenador } = usePokemon();
     const navigate = useNavigate();
 
