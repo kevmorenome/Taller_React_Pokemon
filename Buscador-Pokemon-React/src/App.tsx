@@ -28,3 +28,5 @@ function App(){
     </PokemonProvider>
   )
 }
+
+export default App;
