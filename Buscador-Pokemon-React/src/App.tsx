@@ -28,5 +28,3 @@ function App(){
     </PokemonProvider>
   )
 }
-
-const numero: number= "hola";
