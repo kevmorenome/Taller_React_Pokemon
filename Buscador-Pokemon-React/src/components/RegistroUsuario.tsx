@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Navigate } from 'react-router-dom'
 import { usePokemon, type Usuario} from '../context/PokemonContext'
 
 export const RegistroUsuario: React.FC = () =>{
@@ -134,5 +134,25 @@ return(
                 </div>
             </form>
     </div>
+
+    {entrenadores.length > 0 && (
+        <div>
+            <h3> Cambiar Entrenador </h3>
+            <div>
+                {entrenadores.map((user) => (
+                    <button key={user.id} type="button" onClick={() => seleccionarEntrenador(user)}
+                    style={{
+                        backgroundColor: entrenadorActivo?.id === user.id ? '#FF00FF' : '#e0e0e0',
+                        color: entrenadorActivo?.id === user.id ? 'white' : 'black',
+                        padding: '6px 12 px'                
+                    }}> {user.nombreCompleto}</button>
+                ))}
+            </div>
+        </div>
+    )
+    }
 </div>
-)};
+);
+
+
+};
