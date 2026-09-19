@@ -9,7 +9,7 @@ function App(){
     <PokemonProvider>
       <BrowserRouter>
         <header>
-          <h1> Regitro de Entrenadores y Pokemon en React</h1>
+          <h1> Registro de Entrenadores y Pokemon en React</h1>
           <nav>
             <NavLink to="/registro" className={(isActive) => (isActive ? 'active-tab' : '')}> Registro </NavLink>
             <NavLink to="/buscador" className={(isActive) => (isActive ? 'active-tab' : '')}> Buscador </NavLink>

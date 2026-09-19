@@ -1,153 +1,930 @@
-body {
-  font-family: system-ui, -apple-system, sans-serif;
-  background-color: #f4f6f8;
-  margin: 0;
-  padding: 0;
-}
+/* ==========================================================================
+   TALLER POKÉMON - DISEÑO MODERNO POKÉDEX & TRAINER EDITION
+   ========================================================================== */
 
-.navbar {
-  background-color: #ef5350;
-  color: white;
-  padding: 1rem 2rem;
-  text-align: center;
-}
-
-.nav-links {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 10px;
-}
-
-.nav-links a {
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-  padding: 8px 16px;
-  border-radius: 20px;
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-.nav-links a.active-tab {
-  background-color: white;
-  color: #ef5350;
-}
-
-.form-container {
-  max-width: 650px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-.form-row {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 12px;
-}
-
-.form-group {
-  flex: 1;
+/* --------------------------------------------------------------------------
+   1. NAVEGACIÓN Y ENCABEZADO PRINCIPAL (POKÉDEX CHASSIS)
+   -------------------------------------------------------------------------- */
+#root > header {
+  background: linear-gradient(135deg, var(--poke-red) 0%, var(--poke-red-dark) 100%);
+  color: #ffffff;
+  padding: 1.25rem 1.5rem 1.5rem;
+  box-shadow: 0 6px 20px rgba(238, 21, 21, 0.28), 0 2px 6px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 4px solid #990000;
   display: flex;
   flex-direction: column;
-  margin-bottom: 12px;
+  align-items: center;
+  gap: 1rem;
 }
 
-.form-group label {
+/* Indicador visual de sensor PokéDex */
+#root > header::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: 20px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffffff 0%, var(--poke-cyan) 40%, var(--poke-blue-dark) 100%);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 12px rgba(6, 182, 212, 0.85);
+}
+
+#root > header h1 {
+  font-family: var(--font-main);
+  font-size: clamp(1.25rem, 3.2vw, 1.9rem);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  text-align: center;
+  color: #ffffff;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+#root > header nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.15);
+  padding: 6px;
+  border-radius: var(--radius-full);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+#root > header nav a,
+.nav-links a {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  font-family: var(--font-main);
   font-weight: 600;
-  margin-bottom: 4px;
+  font-size: 0.95rem;
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  background: transparent;
+  transition: all var(--transition-fast);
+  scale: 1;
+  translate: 0 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.form-group input,
-.form-group select {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+#root > header nav a:hover,
+.nav-links a:hover {
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  translate: 0 -2px;
 }
 
-.checkbox-group {
-  margin: 15px 0;
+#root > header nav a.active-tab,
+#root > header nav a.active,
+.nav-links a.active-tab {
+  background: #ffffff;
+  color: var(--poke-red-dark);
+  font-weight: 800;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  translate: 0 0;
 }
 
-.btn-submit,
-.btn-capturar {
-  background-color: #ef5350;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
+/* --------------------------------------------------------------------------
+   2. CONTENEDOR PRINCIPAL
+   -------------------------------------------------------------------------- */
+#root > main {
+  flex: 1;
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* --------------------------------------------------------------------------
+   3. MÓDULO BUSCADOR POKÉMON (BuscadorPokemon.tsx)
+   -------------------------------------------------------------------------- */
+/* Contenedor principal de la vista de búsqueda */
+main > div:has(form button[type="submit"]):not(:has(.grupo-campo)) {
+  width: 100%;
+  max-width: 680px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Banner de Estado del Entrenador Activo */
+main > div:has(form button[type="submit"]):not(:has(.grupo-campo)) > div:first-child,
+.banner-sesion,
+[class*="banner"] {
+  width: 100%;
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.75rem;
+  box-shadow: var(--poke-shadow-sm);
+  border: 1px solid var(--poke-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.98rem;
+  color: var(--poke-text-secondary);
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow var(--transition-fast);
+}
+
+main > div:has(form button[type="submit"]):not(:has(.grupo-campo)) > div:first-child:has(strong),
+.banner-sesion:has(strong) {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+  border-left: 5px solid #22c55e;
+  color: #166534;
+}
+
+main > div:has(form button[type="submit"]):not(:has(.grupo-campo)) > div:first-child:not(:has(strong)) {
+  background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
+  border-left: 5px solid var(--poke-yellow);
+  color: #92400e;
+}
+
+main > div:has(form button[type="submit"]):not(:has(.grupo-campo)) > div:first-child strong,
+.banner-sesion strong {
+  color: var(--poke-dark);
+  font-weight: 700;
+}
+
+/* Formulario de Búsqueda */
+main form:not(:has(.grupo-campo)) {
+  width: 100%;
+  background: #ffffff;
+  padding: 1.75rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--poke-shadow-md);
+  border: 1px solid var(--poke-border);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: relative;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+main form:not(:has(.grupo-campo)) > div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   width: 100%;
 }
 
-.btn-capturar {
-  background-color: #ff9800;
-  margin-top: 10px;
+main form:not(:has(.grupo-campo)) label {
+  font-family: var(--font-main);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--poke-text-secondary);
 }
 
-.banner-sesion {
-  background-color: #e3f2fd;
-  padding: 10px 15px;
-  border-radius: 8px;
-  margin-bottom: 15px;
+main form:not(:has(.grupo-campo)) input[type="text"] {
+  width: 100%;
+  padding: 13px 18px;
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--poke-dark);
+  background-color: var(--poke-bg);
+  border: 2px solid var(--poke-border);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: all var(--transition-fast);
 }
 
-.tarjeta-pokemon {
-  margin-top: 20px;
-  padding: 20px;
-  border-radius: 12px;
+main form:not(:has(.grupo-campo)) input[type="text"]:focus {
+  border-color: var(--poke-red);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(238, 21, 21, 0.15);
+}
+
+main form:not(:has(.grupo-campo)) input[type="text"]::placeholder {
+  color: var(--poke-text-light);
+}
+
+/* Botón de Búsqueda */
+main form:not(:has(.grupo-campo)) button[type="submit"] {
+  background: linear-gradient(135deg, var(--poke-red) 0%, var(--poke-red-dark) 100%);
+  color: #ffffff;
+  font-family: var(--font-main);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 13px 24px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--poke-shadow-red);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all var(--transition-fast);
+  scale: 1;
+  translate: 0 0;
+}
+
+main form:not(:has(.grupo-campo)) button[type="submit"]:hover:not(:disabled) {
+  scale: 1.02;
+  translate: 0 -2px;
+  box-shadow: 0 10px 24px rgba(238, 21, 21, 0.38);
+}
+
+main form:not(:has(.grupo-campo)) button[type="submit"]:active:not(:disabled) {
+  scale: 0.98;
+  translate: 0 0;
+}
+
+/* Estado de carga / Escaneo */
+main form:not(:has(.grupo-campo)) button[type="submit"]:disabled {
+  background: linear-gradient(135deg, var(--poke-blue) 0%, var(--poke-blue-dark) 100%);
+  box-shadow: 0 4px 16px rgba(0, 117, 190, 0.35);
+  cursor: wait;
+  animation: pulse-scanning 1.6s ease-in-out infinite;
+}
+
+/* Mensajes de error */
+.error,
+.mensaje-error,
+div[role="alert"],
+.alerta-error,
+form + p {
+  background-color: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
   text-align: center;
-  border: 2px solid #2a75bb;
-  background-color: #fafafa;
+  margin-top: 1rem;
+  width: 100%;
 }
 
+/* --------------------------------------------------------------------------
+   4. TARJETA DE INFORMACIÓN POKÉMON (POKÉMON CARD)
+   -------------------------------------------------------------------------- */
+/* Selector amplio para la tarjeta de Pokémon mostrada tras buscar */
+main > div > div:has(> .btn-capturar),
+.tarjeta-pokemon {
+  width: 100%;
+  max-width: 440px;
+  margin: 2.5rem auto 1rem;
+  background: #ffffff;
+  border-radius: 26px;
+  padding: 2.5rem 2rem 2rem;
+  text-align: center;
+  box-shadow: var(--poke-shadow-lg);
+  border: 2px solid rgba(238, 21, 21, 0.15);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: cardAppear 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  scale: 1;
+  translate: 0 0;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+main > div > div:has(> .btn-capturar):hover,
+.tarjeta-pokemon:hover {
+  box-shadow: 0 24px 48px -10px rgba(15, 23, 42, 0.16);
+  translate: 0 -4px;
+}
+
+/* Marca de agua decorativa de Pokéball en el fondo de la tarjeta */
+main > div > div:has(> .btn-capturar)::before,
+.tarjeta-pokemon::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(238, 21, 21, 0.05) 0%, rgba(238, 21, 21, 0.02) 60%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Nombre del Pokémon */
+main > div > div:has(> .btn-capturar) h3,
+.tarjeta-pokemon h3 {
+  font-family: var(--font-main);
+  font-size: 2.1rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: var(--poke-dark);
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Imagen del Pokémon con pedestal radial */
+main > div > div:has(> .btn-capturar) img,
+.tarjeta-pokemon img {
+  width: 190px;
+  height: 190px;
+  object-fit: contain;
+  margin: 0.5rem auto 1.25rem;
+  background: radial-gradient(circle, rgba(255, 203, 5, 0.22) 0%, rgba(238, 21, 21, 0.08) 50%, transparent 72%);
+  border-radius: 50%;
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.15));
+  animation: pokemon-float 3.5s ease-in-out infinite;
+  scale: 1;
+  translate: 0 0;
+  transition: scale var(--transition-bounce);
+  position: relative;
+  z-index: 1;
+}
+
+main > div > div:has(> .btn-capturar) img:hover,
+.tarjeta-pokemon img:hover {
+  scale: 1.1;
+}
+
+/* Elemento / Tipo de Pokémon */
+main > div > div:has(> .btn-capturar) p:has(span),
+.tarjeta-pokemon p:has(span) {
+  font-family: var(--font-main);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--poke-text-secondary);
+  margin: 0.5rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Enriquecimiento de la insignia de tipo (complementando inline styles) */
+main > div > div:has(> .btn-capturar) p span,
+.tarjeta-pokemon p span {
+  font-family: var(--font-stats) !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  letter-spacing: 1.2px !important;
+  padding: 4px 14px !important;
+  border-radius: var(--radius-full) !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+  display: inline-block;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  transition: transform var(--transition-fast);
+}
+
+main > div > div:has(> .btn-capturar) p span:hover,
+.tarjeta-pokemon p span:hover {
+  transform: scale(1.08);
+}
+
+/* Experiencia Base (Estadísticas) */
+main > div > div:has(> .btn-capturar) p:has(strong),
+.tarjeta-pokemon p:has(strong) {
+  font-family: var(--font-main);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--poke-text-secondary);
+  margin: 0.75rem 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+main > div > div:has(> .btn-capturar) p strong,
+.tarjeta-pokemon p strong {
+  font-family: var(--font-stats);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--poke-blue);
+  background: rgba(0, 117, 190, 0.08);
+  padding: 3px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(0, 117, 190, 0.2);
+  letter-spacing: 0.5px;
+}
+
+/* Botón Guardar en la Mochila (.btn-capturar) */
+.btn-capturar,
+main > div > div:has(> .btn-capturar) button.btn-capturar {
+  width: 100%;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #ffffff;
+  font-family: var(--font-main);
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 14px 20px;
+  border-radius: var(--radius-full);
+  box-shadow: 0 8px 20px rgba(245, 158, 11, 0.35);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all var(--transition-fast);
+  scale: 1;
+  translate: 0 0;
+  margin-top: 0.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.btn-capturar:hover:not(:disabled) {
+  scale: 1.02;
+  translate: 0 -2px;
+  box-shadow: 0 12px 28px rgba(245, 158, 11, 0.45);
+}
+
+.btn-capturar:active:not(:disabled) {
+  scale: 0.98;
+  translate: 0 0;
+}
+
+.btn-capturar:disabled {
+  background: #cbd5e1;
+  color: #64748b;
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* --------------------------------------------------------------------------
+   5. MÓDULO INVENTARIO / MOCHILA (InventarioPokemon.tsx)
+   -------------------------------------------------------------------------- */
+main > div:has(.grid-mochila) {
+  width: 100%;
+}
+
+main > div:has(.grid-mochila) > header h2 {
+  font-family: var(--font-main);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 800;
+  color: var(--poke-dark);
+  text-align: center;
+  margin-bottom: 1.75rem;
+  letter-spacing: -0.5px;
+}
+
+/* Cuadrícula responsiva de la mochila */
 .grid-mochila {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 15px;
-  margin-top: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  margin-top: 1rem;
 }
 
+/* Tarjeta individual del Pokémon en inventario */
 .tarjeta-item {
-  background: white;
-  padding: 15px;
-  border-radius: 12px;
-  border: 1px solid #e0e0e0;
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--poke-border);
+  padding: 1.5rem 1.25rem 1.25rem;
   text-align: center;
+  box-shadow: var(--poke-shadow-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  transition: all var(--transition-bounce);
+  scale: 1;
+  translate: 0 0;
+  overflow: hidden;
 }
 
+.tarjeta-item:hover {
+  translate: 0 -6px;
+  box-shadow: var(--poke-shadow-md);
+  border-color: rgba(238, 21, 21, 0.25);
+}
+
+/* Badge de índice / número */
+.tarjeta-item > span:first-child {
+  align-self: flex-start;
+  font-family: var(--font-stats);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--poke-text-secondary);
+  background: var(--poke-bg);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+/* Sprite en inventario */
+.tarjeta-item img {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  margin: 0.25rem auto 0.75rem;
+  background: radial-gradient(circle, rgba(0, 117, 190, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  transition: transform var(--transition-bounce);
+}
+
+.tarjeta-item:hover img {
+  transform: scale(1.12);
+}
+
+/* Título del Pokémon en inventario */
+.tarjeta-item h4 {
+  font-family: var(--font-main);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--poke-dark);
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+  letter-spacing: 0.5px;
+}
+
+/* Tipo en inventario */
+.tarjeta-item > p {
+  font-family: var(--font-stats);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--poke-text-secondary);
+  background: #f1f5f9;
+  padding: 3px 12px;
+  border-radius: var(--radius-full);
+  margin-bottom: 1.25rem;
+}
+
+/* Tarjeta Favorita */
 .tarjeta-favorita {
-  background-color: #fffde7;
-  border: 2px solid #fbc02d;
+  background: linear-gradient(180deg, #fffdf2 0%, #ffffff 100%);
+  border: 2px solid var(--poke-yellow);
+  box-shadow: var(--poke-shadow-yellow);
 }
 
+.tarjeta-favorita:hover {
+  border-color: var(--poke-gold);
+  box-shadow: 0 12px 30px rgba(255, 203, 5, 0.45);
+}
+
+/* Panel de botones de la tarjeta */
 .panel-botones {
   display: flex;
-  justify-content: space-around;
-  margin-top: 10px;
+  gap: 8px;
+  width: 100%;
+  margin-top: auto;
 }
 
+.btn-favorito,
 .btn-fav {
-  background: #eee;
-  border: 1px solid #ccc;
-  padding: 4px 8px;
-  border-radius: 4px;
+  flex: 1;
+  padding: 8px 10px;
+  font-family: var(--font-main);
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  background: #f1f5f9;
+  color: #475569;
+  transition: all var(--transition-fast);
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
 
+.btn-favorito:hover,
+.btn-fav:hover {
+  background: #fef08a;
+  color: #854d0e;
+}
+
+.btn-favorito.activo,
 .btn-fav.fav-activo {
-  background: #fbc02d;
-  font-weight: bold;
+  background: var(--poke-yellow);
+  color: #713f12;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(255, 203, 5, 0.35);
 }
 
 .btn-eliminar {
-  background: #ef5350;
-  color: white;
-  border: none;
-  padding: 4px 8px;
-  border-radius: 4px;
+  padding: 8px 12px;
+  font-family: var(--font-main);
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  background: #fee2e2;
+  color: #dc2626;
+  transition: all var(--transition-fast);
   cursor: pointer;
+}
+
+.btn-eliminar:hover {
+  background: var(--poke-red);
+  color: #ffffff;
+  box-shadow: 0 3px 10px rgba(238, 21, 21, 0.28);
+}
+
+/* Estado de mochila vacía */
+.grid-mochila > div:not(.tarjeta-item) {
+  grid-column: 1 / -1;
+  background: #ffffff;
+  border: 2px dashed var(--poke-border);
+  border-radius: var(--radius-lg);
+  padding: 3.5rem 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.grid-mochila > div:not(.tarjeta-item) p:first-child {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--poke-dark);
+}
+
+.grid-mochila > div:not(.tarjeta-item) p:last-child {
+  font-size: 1rem;
+  color: var(--poke-text-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   6. MÓDULO REGISTRO DE ENTRENADORES (RegistroUsuario.tsx)
+   -------------------------------------------------------------------------- */
+main > div:has(form#form-registro),
+main > div:has(.grupo-campo) {
+  width: 100%;
+  max-width: 760px;
+}
+
+main > div:has(.grupo-campo) > header h2 {
+  font-family: var(--font-main);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 800;
+  color: var(--poke-dark);
+  text-align: center;
+  margin-bottom: 1.75rem;
+  letter-spacing: -0.5px;
+}
+
+/* Formulario de registro en cuadrícula */
+main form:has(.grupo-campo) {
+  background: #ffffff;
+  padding: 2.25rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--poke-shadow-md);
+  border: 1px solid var(--poke-border);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 1.25rem;
+}
+
+.grupo-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.grupo-campo label {
+  font-family: var(--font-main);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--poke-dark);
+}
+
+.grupo-campo input,
+.grupo-campo select {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 0.98rem;
+  font-family: var(--font-main);
+  color: var(--poke-dark);
+  background-color: var(--poke-bg);
+  border: 1.5px solid var(--poke-border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: all var(--transition-fast);
+}
+
+.grupo-campo input:focus,
+.grupo-campo select:focus {
+  border-color: var(--poke-blue);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(0, 117, 190, 0.15);
+}
+
+/* Campos de ancho completo */
+#campo-tipo-documento,
+#campo-email,
+#campo-politica,
+#campo-envio {
+  grid-column: 1 / -1;
+}
+
+/* Checkbox política */
+#campo-politica {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  margin: 0.5rem 0;
+}
+
+#campo-politica input[type="checkbox"] {
+  width: 19px;
+  height: 19px;
+  cursor: pointer;
+  accent-color: var(--poke-red);
+}
+
+#campo-politica label {
+  font-size: 0.9rem;
+  color: var(--poke-text-secondary);
+  cursor: pointer;
+}
+
+/* Botón Enviar */
+#campo-envio button,
+#boton-enviar {
+  width: 100%;
+  background: linear-gradient(135deg, var(--poke-red) 0%, var(--poke-red-dark) 100%);
+  color: #ffffff;
+  font-family: var(--font-main);
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 13px 24px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--poke-shadow-red);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  scale: 1;
+  translate: 0 0;
+}
+
+#campo-envio button:hover,
+#boton-enviar:hover {
+  scale: 1.02;
+  translate: 0 -2px;
+  box-shadow: 0 10px 24px rgba(238, 21, 21, 0.38);
+}
+
+/* Sección Cambiar Entrenador */
+main > div:has(.grupo-campo) > div:last-child:not(:has(form)) {
+  margin-top: 2.25rem;
+  background: #ffffff;
+  padding: 1.5rem 2rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--poke-border);
+  box-shadow: var(--poke-shadow-sm);
+  text-align: center;
+}
+
+main > div:has(.grupo-campo) > div:last-child:not(:has(form)) h3 {
+  font-family: var(--font-main);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--poke-dark);
+  margin-bottom: 1rem;
+}
+
+main > div:has(.grupo-campo) > div:last-child:not(:has(form)) > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+main > div:has(.grupo-campo) > div:last-child:not(:has(form)) button {
+  font-family: var(--font-main) !important;
+  font-weight: 700 !important;
+  font-size: 0.9rem !important;
+  border-radius: var(--radius-full) !important;
+  padding: 8px 18px !important;
+  border: 1.5px solid transparent !important;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+main > div:has(.grupo-campo) > div:last-child:not(:has(form)) button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* --------------------------------------------------------------------------
+   7. ANIMACIONES CLAVE
+   -------------------------------------------------------------------------- */
+@keyframes pokemon-float {
+  0%, 100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -9px;
+  }
+}
+
+@keyframes cardAppear {
+  0% {
+    opacity: 0;
+    scale: 0.93;
+    translate: 0 16px;
+  }
+  100% {
+    opacity: 1;
+    scale: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes pulse-scanning {
+  0%, 100% {
+    box-shadow: 0 4px 16px rgba(0, 117, 190, 0.35);
+    filter: brightness(1);
+  }
+  50% {
+    box-shadow: 0 6px 24px rgba(6, 182, 212, 0.7);
+    filter: brightness(1.15);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   8. RESPONSIVIDAD Y MEDIA QUERIES (MÓVIL Y TABLET)
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  #root > main {
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  main form:has(.grupo-campo) {
+    grid-template-columns: 1fr;
+    padding: 1.5rem;
+    gap: 0.85rem;
+  }
+
+  .grid-mochila {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+  }
+
+  main > div > div:has(> .btn-capturar),
+  .tarjeta-pokemon {
+    padding: 2rem 1.25rem 1.5rem;
+  }
+
+  main > div > div:has(> .btn-capturar) img,
+  .tarjeta-pokemon img {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  #root > header {
+    padding: 1rem 1rem 1.25rem;
+  }
+
+  #root > header::before {
+    display: none;
+  }
+
+  #root > header nav a,
+  .nav-links a {
+    padding: 6px 12px;
+    font-size: 0.88rem;
+  }
+
+  main form:not(:has(.grupo-campo)) {
+    padding: 1.25rem 1rem;
+  }
+
+  .grid-mochila {
+    grid-template-columns: 1fr;
+  }
+
+  .tarjeta-item img {
+    width: 100px;
+    height: 100px;
+  }
 }

@@ -74,23 +74,39 @@ export const PokemonProvider : React.FC<{ children : React.ReactNode}> = ({ chil
     };
 
     const resgistrarEntrenador = registrarEntrenador;
-    const guardarPokemonMochila = (pokemon: PokemonTarjeta) => {
+     const guardarPokemonMochila = (pokemon: PokemonTarjeta) => {
         if (!entrenadorActivo) return;
 
         const key = `mochila_${entrenadorActivo.id}`;
         const dataActual = localStorage.getItem(key);
         const mochilaReal: PokemonTarjeta[] = dataActual ? JSON.parse(dataActual) : [];
 
+        // Evita guardar el mismo pokémon duplicado
+        const yaExiste = mochilaReal.some(p => p.id === pokemon.id);
+        if (yaExiste) {
+            alert(`¡${pokemon.name} ya se encuentra en tu mochila!`);
+            return;
+        }
+
         const actualizada = [...mochilaReal, { ...pokemon, esFavorito: false }];
         localStorage.setItem(key, JSON.stringify(actualizada));
         setMochilaActual(actualizada); 
     };
 
-    const actualizarFavorito =(pokemonId: number) =>{
-        if(!entrenadorActivo) return;
-        const actualizada = mochilaActual.map(p => p.id === pokemonId ? {...p,esFavorito: !p.esFavorito}: p);
-        localStorage.setItem(`mochila_${entrenadorActivo.id}`, JSON.stringify(actualizada));
+    const actualizarFavorito = (pokemonId: number) => {
+        if (!entrenadorActivo) return;
 
+        const key = `mochila_${entrenadorActivo.id}`;
+        const dataActual = localStorage.getItem(key);
+        const mochilaReal: PokemonTarjeta[] = dataActual ? JSON.parse(dataActual) : mochilaActual;
+
+        // Modifica únicamente el pokémon existente que coincida con el ID (sin crear elementos nuevos)
+        const actualizada = mochilaReal.map(p =>
+            p.id === pokemonId ? { ...p, esFavorito: !p.esFavorito } : p
+        );
+
+        localStorage.setItem(key, JSON.stringify(actualizada));
+        setMochilaActual(actualizada);
     };
 
     const eliminarPokemon = (pokemonId: number) => {

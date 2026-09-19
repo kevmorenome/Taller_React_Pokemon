@@ -1,29 +1,22 @@
 import React, { useState } from 'react';
-import {usePokemon, type PokemonTarjeta } from '../context/PokemonContext';
-
-export const BuscadorPokemon: React.FC = () =>{
-
+import { useNavigate } from 'react-router-dom';
+import { usePokemon, type PokemonTarjeta } from '../context/PokemonContext';
+export const BuscadorPokemon: React.FC = () => {
+    const navigate = useNavigate(); // 👈 2. Inicializar navigate
     const { entrenadorActivo, guardarPokemonMochila } = usePokemon();
-
     const [busqueda, setBusqueda] = useState('');
     const [pokemonActual, setPokemonActual] = useState<PokemonTarjeta | null>(null);
     const [mensajeError, setMensajeError] = useState<string | null>(null);
     const [cargando, setCargando] = useState(false);
-
     const buscarPokemon = async (e: React.FormEvent) => {
         e.preventDefault();
-
         const query = busqueda.trim().toLowerCase();
-
-        if(!query) return;
-
+        if (!query) return;
         setCargando(true);
         setMensajeError(null);
-
         try {
             const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${query}`);
-            if(!res.ok) throw new Error('Auxilio, Socorro, no hay Pokemon');
-
+            if (!res.ok) throw new Error('Auxilio, Socorro, no hay Pokemon');
             const datos = await res.json();
             setPokemonActual({
                 id: datos.id,
@@ -39,23 +32,21 @@ export const BuscadorPokemon: React.FC = () =>{
         } finally {
             setCargando(false);
         }
-
     };
-
-
     const clickGuardar = () => {
-
-        if(!entrenadorActivo){
+        if (!entrenadorActivo) {
             alert('Debes seleccionar o registrar un entrenador');
             return;
         }
-
-        if(pokemonActual){
-        guardarPokemonMochila(pokemonActual);
-        alert(`El Pokemon ${pokemonActual.name} es guardado en la mochila de ${entrenadorActivo?.nombreCompleto}`);
+        if (pokemonActual) {
+            guardarPokemonMochila(pokemonActual);
+            alert(`El Pokemon ${pokemonActual.name} es guardado en la mochila de ${entrenadorActivo?.nombreCompleto}`);
+            setBusqueda('');
+            setPokemonActual(null);
+            setMensajeError(null);
+            navigate('/inventario');
         }
-    }
-
+    };
 
 return(
 <div className="">
